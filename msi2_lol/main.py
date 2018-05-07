@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
 
     iterations_number = 1000
-    displays_number = 20
+    displays_number = 10
     batch_size = 100
 
     tf.set_random_seed(0)
@@ -31,13 +31,18 @@ if __name__ == "__main__":
 
     fullyConnectedLayer = 256
 
-    W1 = tf.Variable(tf.truncated_normal([5, 5, 1, firstLayer], stddev=0.1))
+    firstFilterSize = 7
+    secondFilterSize = 4
+    thirdFilterSize = 4
+    fourthFilterSize = 7
+
+    W1 = tf.Variable(tf.truncated_normal([firstFilterSize, firstFilterSize, 1, firstLayer], stddev=0.1))
     b1 = tf.Variable(tf.truncated_normal([firstLayer], stddev=0.1))
-    W2 = tf.Variable(tf.truncated_normal([3, 3, firstLayer, secondLayer], stddev=0.1))
+    W2 = tf.Variable(tf.truncated_normal([secondFilterSize, secondFilterSize, firstLayer, secondLayer], stddev=0.1))
     b2 = tf.Variable(tf.truncated_normal([secondLayer], stddev=0.1))
-    W3 = tf.Variable(tf.truncated_normal([3, 3, secondLayer, thirdLayer], stddev=0.1))
+    W3 = tf.Variable(tf.truncated_normal([thirdFilterSize, thirdFilterSize, secondLayer, thirdLayer], stddev=0.1))
     b3 = tf.Variable(tf.truncated_normal([thirdLayer], stddev=0.1))
-    W4 = tf.Variable(tf.truncated_normal([7 * 7 * thirdLayer, fullyConnectedLayer], stddev=0.1))
+    W4 = tf.Variable(tf.truncated_normal([fourthFilterSize * fourthFilterSize * thirdLayer, fullyConnectedLayer], stddev=0.1))
     b4 = tf.Variable(tf.truncated_normal([fullyConnectedLayer], stddev=0.1))
     W5 = tf.Variable(tf.truncated_normal([fullyConnectedLayer, 10], stddev=0.1))
     b5 = tf.Variable(tf.truncated_normal([10], stddev=0.1))
@@ -119,6 +124,10 @@ if __name__ == "__main__":
                 train_accuracies.append(test_loss)
                 test_accuracies.append(test_accuracy)
 
-            # the backpropagationn training step
+            # wlasciwe trenowanie
             sess.run(train_step, feed_dict={inputLayer: batch_X, outputLayer: batch_Y, pkeep: 0.75})
+
+
+            # wyswietlenie jak zmienia podczas uczenia (na podstawie list ze zmianami)
+            # moga byc dwa wykresiki (dla trenowania i dla testowania)
 
