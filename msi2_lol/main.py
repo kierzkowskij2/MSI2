@@ -32,8 +32,8 @@ if __name__ == "__main__":
     fullyConnectedLayer = 256
 
     firstFilterSize = 7
-    secondFilterSize = 4
-    thirdFilterSize = 4
+    secondFilterSize = 5
+    thirdFilterSize = 3
     fourthFilterSize = 7
 
     W1 = tf.Variable(tf.truncated_normal([firstFilterSize, firstFilterSize, 1, firstLayer], stddev=0.1))
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     W5 = tf.Variable(tf.truncated_normal([fullyConnectedLayer, 10], stddev=0.1))
     b5 = tf.Variable(tf.truncated_normal([10], stddev=0.1))
 
-    XX = tf.reshape(inputLayer, [-1, 7 * 7 * thirdLayer])
+    XX = tf.reshape(inputLayer, [-1, fourthFilterSize * fourthFilterSize * thirdLayer])
 
     # Sam model sieci:
     # max pool - max z kwadratów 2 na 2 (mozna ustawic inaczej)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     # do magicznego trenowania
-    learning_rate = 0.004
+    learning_rate = 0.0035
     train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 
     # potrzebne zmienne
@@ -105,11 +105,9 @@ if __name__ == "__main__":
         sess.run(init)
 
         for i in range(iterations_number + 1):
-            # training on batches of 100 images with 100 labels
             batch_X, batch_Y = mnist.train.next_batch(batch_size)
 
             if i % (iterations_number/displays_number) == 0:
-                # compute training values for visualisation
                 train_accuracy, train_loss, w, b = sess.run([accuracy, cross_entropy, allweights, allbiases],
                                                    feed_dict={inputLayer: batch_X, outputLayer: batch_Y, pkeep: 1.0})
 
