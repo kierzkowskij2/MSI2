@@ -4,13 +4,15 @@
 # na wejsciu 28 na 28 na 1 (rozmiar obrazka)
 # output 10 (cyfry 0 - 9)
 import tensorflow as tf
+import plotly
+from plotly.graph_objs import Scatter, Layout
 from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 
 if __name__ == "__main__":
 
 
-    iterations_number = 1000
-    displays_number = 10
+    iterations_number = 2000
+    displays_number = 50
     batch_size = 100
 
     tf.set_random_seed(0)
@@ -88,6 +90,7 @@ if __name__ == "__main__":
     # potrzebne zmienne
     init = tf.global_variables_initializer()
 
+    points = list()
     train_losses = list()
     train_accuracies = list()
     test_losses = list()
@@ -116,16 +119,44 @@ if __name__ == "__main__":
 
                 print("#{} Train accuracy = {} , Train loss = {} Test accuracy = {} , Test loss={}".format(i, train_accuracy, train_loss, test_accuracy,
                                                                                      test_loss))
-
+                points.append(i)
                 train_losses.append(train_loss)
                 test_losses.append(test_loss)
-                train_accuracies.append(test_loss)
+                train_accuracies.append(train_accuracy)
                 test_accuracies.append(test_accuracy)
 
             # wlasciwe trenowanie
             sess.run(train_step, feed_dict={inputLayer: batch_X, outputLayer: batch_Y, pkeep: 0.75})
 
-
             # wyswietlenie jak zmienia podczas uczenia (na podstawie list ze zmianami)
             # moga byc dwa wykresiki (dla trenowania i dla testowania)
+
+            if(i >= iterations_number):
+                x = points
+                y1 = train_losses
+                y2 = train_accuracies
+                y3 = test_losses
+                y4 = test_accuracies
+
+
+                plotly.offline.plot({
+                    "data": [Scatter(x=x, y=y1)],
+                    "layout": Layout(title="Train losses")
+                }, filename = 'train_losses.html')
+
+                plotly.offline.plot({
+                    "data": [Scatter(x=x, y=y2)],
+                    "layout": Layout(title="Train accuracies")
+                }, filename = 'train_accuracies.html')
+
+                plotly.offline.plot({
+                    "data": [Scatter(x=x, y=y3)],
+                    "layout": Layout(title="Test losses")
+                }, filename = 'test_losses.html')
+
+                plotly.offline.plot({
+                    "data": [Scatter(x=x, y=y4)],
+                    "layout": Layout(title="Test accuracies")
+                }, filename = 'test_accuracies.html')
+
 
