@@ -11,7 +11,9 @@ from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 if __name__ == "__main__":
 
 
-    iterations_number = 2000
+    # augmentacja danych -> przesuniecia, obroty (małe)
+
+    iterations_number = 500
     displays_number = 50
     batch_size = 100
 
